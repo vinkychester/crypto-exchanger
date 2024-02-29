@@ -1,0 +1,16 @@
+FROM node:14.17.1-alpine3.13
+
+WORKDIR /var/www/buycoin/frontend
+
+COPY package*.json ./
+#COPY *.env* ./
+#RUN echo -e "REACT_APP_GOOGLE_CLIENT_ID=789644364250-6nrghrhkupaugi4j34usj75e5h9gnph6.apps.googleusercontent.com" > /var/www/buycoin/frontend/.env
+
+
+RUN npm install
+RUN npm cache clean -f
+RUN npm cache verify
+RUN npm install -g react-scripts
+RUN npm audit fix
+
+COPY . .

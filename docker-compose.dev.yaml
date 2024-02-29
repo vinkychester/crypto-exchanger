@@ -1,0 +1,64 @@
+version: "3"
+
+services:
+
+  frontend:
+    build:
+      dockerfile: ../docker/frontend/Dockerfile.prod
+    command: npm start
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+    volumes:
+      - ./frontend:${FRONTEND_DIRECTORY}
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - MERCURE_PUBLISH_URL=${MERCURE_PURL_DEV}
+
+  api:
+    build:
+      dockerfile: ../docker/api/php/Dockerfile.dev
+    volumes:
+      - ./docker/api/php/cronfiles:/cronfiles
+      - ./docker/api/php/supervisor:/etc/supervisor.d
+      - ./docker/api/config/docker-opcache.ini:/usr/local/etc/php/conf.d/docker-opcache.ini
+      - ./docker/api/config/docker-xdebug.ini:/usr/local/etc/php/conf.d/docker-xdebug.ini
+    restart: unless-stopped
+    environment:
+      XDEBUG_CONFIG: "client_host=172.22.0.1"
+      XDEBUG_SESSION: 1
+      PHP_IDE_CONFIG: "serverName=Docker"
+
+  nginx:
+    restart: unless-stopped
+    volumes:
+      - ./docker/certs/dev:/etc/nginx/certs
+    ports:
+      - 80:80
+      - 443:443
+    environment:
+      NODE_ENV: dev
+      NGINX_HOST: ${NGINX_HOST_DEV}
+      NGINX_PORT: ${NGINX_PORT_DEV}
+      NGINX_CERT_CRT: ${NGINX_CERT_CRT_DEV}
+      NGINX_CERT_KEY: ${NGINX_CERT_KEY_DEV}
+      NGINX_MERCURE_IP: ${MERCURE_IPV4}
+
+  redis:
+    build:
+      context: ./docker/redis
+    container_name: buycoin-redis
+    hostname: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - ./data:/data
+    restart: always
+    networks:
+      buycoin:
+        ipv4_address: ${REDIS_IPV4}
+
+volumes:
+  redis:
+  nginx:
+    driver: "local"

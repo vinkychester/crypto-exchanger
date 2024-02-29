@@ -1,0 +1,26 @@
+api_platform:
+    mapping:
+        paths: ['%kernel.project_dir%/src/Entity']
+    patch_formats:
+        json: ['application/merge-patch+json']
+    swagger:
+        versions: [3]
+    collection:
+        pagination:
+            client_items_per_page: true
+    allow_plain_identifiers: true
+
+#    eager_loading:
+#        # To enable or disable eager loading.
+#        enabled: true
+#
+#        # Fetch only partial data according to serialization groups.
+#        # If enabled, Doctrine ORM entities will not work as expected if any of the other fields are used.
+#        fetch_partial: true
+#
+#        # Max number of joined relations before EagerLoading throws a RuntimeException.
+#        max_joins: 30
+#
+#        # Force join on every relation.
+#        # If disabled, it will only join relations having the EAGER fetch mode.
+#        force_eager: true

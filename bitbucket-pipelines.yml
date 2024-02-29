@@ -1,0 +1,34 @@
+# This is a sample build configuration for PHP.
+# Check our guides at https://confluence.atlassian.com/x/e8YWN for more examples.
+# Only use spaces to indent your .yml configuration.
+# -----
+# You can specify a custom docker image from Docker Hub as your build environment.
+ image: php:7.1.29
+
+ pipelines:
+   branches:
+     master:
+     - step:
+         caches:
+           - composer
+         script:
+             - apt-get update && apt-get install -y unzip git
+             - apt-get install git-ftp
+             - git config git-ftp.url ftp://ftp.itlab-studio.com:21/
+             - git config git-ftp.user $FTP_USER_DOCKER_19
+             - git config git-ftp.password $FTP_PASS_DOCKER_19
+             - git ftp push -vv
+
+     dev:
+     - step:
+         caches:
+           - composer
+         script:
+             - apt-get update && apt-get install -y unzip git
+             - apt-get install git-ftp
+             - git config git-ftp.url ftp://ftp.itlab-studio.com:21/
+             - git config git-ftp.user $FTP_USER_DOCKER_3
+             - git config git-ftp.password $FTP_PASS_DOCKER_3
+             - git ftp push -vv
+#            - git ftp catchup
+

@@ -1,0 +1,23 @@
+api_login_check:
+  path: /api/login_check
+  methods: ['POST']
+
+api_google_check:
+  path: /api/google_check
+  methods: ['POST']
+
+api_google_two_auth_secured_area:
+  path: /api/google_two_factor_check
+  methods: ['POST']
+
+email_confirm:
+  path: /email-confirm
+
+change-password:
+  path: /change-password/{token}
+
+base_url:
+  path: /
+
+account_url:
+  path: /panel/account
